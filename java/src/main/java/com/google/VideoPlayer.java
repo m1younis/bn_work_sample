@@ -7,11 +7,11 @@ public class VideoPlayer {
 
      private final VideoLibrary videoLibrary;
 
-     private boolean playing = false;                          // Added as part of PLAY
-     private Video current = null;                             // Added as part of PLAY
-     private final Random rand = new Random();                 // Added as part of PLAY_RANDOM
-     private boolean paused = false;                           // Added as part of PAUSE
-     private final Map<String, VideoPlaylist> playlists;       // Added as part of CREATE_PLAYLIST
+     private boolean playing = false;                            // Added as part of PLAY
+     private Video current = null;                               // Added as part of PLAY
+     private final Random rand = new Random();                   // Added as part of PLAY_RANDOM
+     private boolean paused = false;                             // Added as part of PAUSE
+     private final Map<String, VideoPlaylist> playlists;         // Added as part of CREATE_PLAYLIST
 
      public VideoPlayer() {
           this.videoLibrary = new VideoLibrary();
@@ -59,9 +59,9 @@ public class VideoPlayer {
                     if (!this.playing)
                          this.playing = true;
                     else
-                         System.out.println("Stopping video: " + this.current.getTitle());
+                         System.out.printf("Stopping video: %s\n", this.current.getTitle());
                     this.current = v;
-                    System.out.println("Playing video: " + v.getTitle());
+                    System.out.printf("Playing video: %s\n", v.getTitle());
                }
           }
      }
@@ -70,7 +70,7 @@ public class VideoPlayer {
           if (!this.playing)
                System.out.println("Cannot stop video: No video is currently playing");
           else {
-               System.out.println("Stopping video: " + this.current.getTitle());
+               System.out.printf("Stopping video: %s\n", this.current.getTitle());
                this.playing = false;
                this.paused = true;
                this.current = null;
@@ -92,7 +92,7 @@ public class VideoPlayer {
           else {
                if (!this.paused) {
                     this.paused = true;
-                    System.out.println("Pausing video: " + this.current.getTitle());
+                    System.out.printf("Pausing video: %s\n", this.current.getTitle());
                } else
                     System.out.println("Video already paused: " + this.current.getTitle());
           }
@@ -106,7 +106,7 @@ public class VideoPlayer {
                     System.out.println("Cannot continue video: Video is not paused");
                else {
                     this.paused = false;
-                    System.out.println("Continuing video: " + this.current.getTitle());
+                    System.out.printf("Continuing video: %s\n", this.current.getTitle());
                }
           }
      }
@@ -121,9 +121,9 @@ public class VideoPlayer {
                System.out.println("No video is currently playing");
           else {
                if (!this.paused)
-                    System.out.println("Currently playing: " + this.formatVideo(this.current));
+                    System.out.printf("Currently playing: %s\n", this.formatVideo(this.current));
                else
-                    System.out.println("Currently playing: " + this.formatVideo(this.current) + " - PAUSED");
+                    System.out.printf("Currently playing: %s - PAUSED\n", this.formatVideo(this.current));
           }
      }
 
@@ -133,6 +133,7 @@ public class VideoPlayer {
                if (key.equalsIgnoreCase(name))
                     return this.playlists.get(key);
           }
+
           return null;
      }
 
@@ -141,7 +142,7 @@ public class VideoPlayer {
                System.out.println("Cannot create playlist: A playlist with the same name already exists");
           else {
                this.playlists.put(playlistName, new VideoPlaylist(playlistName));
-               System.out.println("Successfully created new playlist: " + playlistName);
+               System.out.printf("Successfully created new playlist: %s\n", playlistName);
           }
      }
 
@@ -232,6 +233,7 @@ public class VideoPlayer {
                if (s.equalsIgnoreCase(t))
                     return true;
           }
+
           return false;
      }
 
