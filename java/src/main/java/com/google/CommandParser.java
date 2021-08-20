@@ -4,11 +4,10 @@ package com.google;
 import java.util.List;
 
 /** The class used to parse and execute a command given user input. */
-class CommandParser {
-
+public class CommandParser {
      private final VideoPlayer videoPlayer;
 
-     CommandParser(VideoPlayer videoPlayer) {
+     public CommandParser(VideoPlayer videoPlayer) {
           this.videoPlayer = videoPlayer;
      }
 
