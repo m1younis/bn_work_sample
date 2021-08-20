@@ -3,9 +3,7 @@ package com.google;
 
 import java.util.List;
 
-/**
- * A class used to parse and execute a user Command.
- */
+/** The class used to parse and execute a command given user input. */
 class CommandParser {
 
      private final VideoPlayer videoPlayer;
@@ -17,15 +15,15 @@ class CommandParser {
      /**
       * Executes the given user command.
       */
-     public void executeCommand(List<String> command) {
-          if (command.isEmpty()) {
+     public void executeCommand(List<String> input) {
+          if (input.isEmpty()) {
                System.out.println(
                          "Please enter a valid command, " +
                                    "type HELP for a list of available commands.");
                return;
           }
 
-          switch (command.get(0).toUpperCase()) {
+          switch (input.get(0).toUpperCase()) {
                case "NUMBER_OF_VIDEOS":
                     this.videoPlayer.numberOfVideos();
                     break;
@@ -34,7 +32,7 @@ class CommandParser {
                     break;
                case "PLAY":
                     try {
-                         this.videoPlayer.playVideo(command.get(1));
+                         this.videoPlayer.playVideo(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter PLAY command followed by video_id.");
                     }
@@ -56,7 +54,7 @@ class CommandParser {
                     break;
                case "CREATE_PLAYLIST":
                     try {
-                         this.videoPlayer.createPlaylist(command.get(1));
+                         this.videoPlayer.createPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter CREATE_PLAYLIST command followed by a " +
@@ -65,7 +63,7 @@ class CommandParser {
                     break;
                case "ADD_TO_PLAYLIST":
                     try {
-                         this.videoPlayer.addVideoToPlaylist(command.get(1), command.get(2));
+                         this.videoPlayer.addVideoToPlaylist(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter ADD_TO_PLAYLIST command followed by a "
@@ -74,7 +72,7 @@ class CommandParser {
                     break;
                case "REMOVE_FROM_PLAYLIST":
                     try {
-                         this.videoPlayer.removeFromPlaylist(command.get(1), command.get(2));
+                         this.videoPlayer.removeFromPlaylist(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter REMOVE_FROM_PLAYLIST command followed by a "
@@ -83,7 +81,7 @@ class CommandParser {
                     break;
                case "CLEAR_PLAYLIST":
                     try {
-                         this.videoPlayer.clearPlaylist(command.get(1));
+                         this.videoPlayer.clearPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter CLEAR_PLAYLIST command followed by a "
@@ -92,7 +90,7 @@ class CommandParser {
                     break;
                case "DELETE_PLAYLIST":
                     try {
-                         this.videoPlayer.deletePlaylist(command.get(1));
+                         this.videoPlayer.deletePlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter DELETE_PLAYLIST command followed by a " +
@@ -101,7 +99,7 @@ class CommandParser {
                     break;
                case "SHOW_PLAYLIST":
                     try {
-                         this.videoPlayer.showPlaylist(command.get(1));
+                         this.videoPlayer.showPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter SHOW_PLAYLIST command followed by a " +
                                    "playlist name.");
@@ -112,7 +110,7 @@ class CommandParser {
                     break;
                case "SEARCH_VIDEOS":
                     try {
-                         this.videoPlayer.searchVideos(command.get(1));
+                         this.videoPlayer.searchVideos(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter SEARCH_VIDEOS command followed by a " +
                                    "search term.");
@@ -120,7 +118,7 @@ class CommandParser {
                     break;
                case "SEARCH_VIDEOS_WITH_TAG":
                     try {
-                         this.videoPlayer.searchVideosWithTag(command.get(1));
+                         this.videoPlayer.searchVideosWithTag(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter SEARCH_VIDEOS_WITH_TAG command followed by a " +
@@ -129,10 +127,10 @@ class CommandParser {
                     break;
                case "FLAG_VIDEO":
                     try {
-                         this.videoPlayer.flagVideo(command.get(1), command.get(2));
+                         this.videoPlayer.flagVideo(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          try {
-                              this.videoPlayer.flagVideo(command.get(1));
+                              this.videoPlayer.flagVideo(input.get(1));
                          } catch (ArrayIndexOutOfBoundsException f) {
                               System.out.println("Please enter FLAG_VIDEO command followed by a" +
                                         "video_id and an optional flag reason.");
@@ -141,7 +139,7 @@ class CommandParser {
                     break;
                case "ALLOW_VIDEO":
                     try {
-                         this.videoPlayer.allowVideo(command.get(1));
+                         this.videoPlayer.allowVideo(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter ALLOW_VIDEO command followed by a " +
                                    "video_id.");
@@ -162,8 +160,7 @@ class CommandParser {
       * Displays all available commands to the user.
       */
      private void getHelp() {
-          String helpText =
-                    "Available commands:\n"
+          System.out.println("Available commands:\n"
                               + "    NUMBER_OF_VIDEOS - Shows how many videos are in the library.\n"
                               + "    SHOW_ALL_VIDEOS - Lists all videos from the library.\n"
                               + "    PLAY <video_id> - Plays specified video.\n"
@@ -184,7 +181,6 @@ class CommandParser {
                               + "    FLAG_VIDEO <video_id> <flag_reason> - Mark a video as flagged.\n"
                               + "    ALLOW_VIDEO <video_id> - Removes a flag from a video.\n"
                               + "    HELP - Displays help.\n"
-                              + "    EXIT - Terminates the program execution.\n";
-          System.out.println(helpText);
+                              + "    EXIT - Terminates the program execution.\n");
      }
 }
