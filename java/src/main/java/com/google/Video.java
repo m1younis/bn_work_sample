@@ -4,31 +4,30 @@ package com.google;
 import java.util.Collections;
 import java.util.List;
 
-/** A class used to represent a video. */
-class Video {
-
+/** A class used to represent a video entity. */
+public class Video {
      private final String title;
-     private final String videoId;
+     private final String id;
      private final List<String> tags;
 
-     Video(String title, String videoId, List<String> tags) {
+     public Video(String title, String id, List<String> tags) {
           this.title = title;
-          this.videoId = videoId;
+          this.id = id;
           this.tags = Collections.unmodifiableList(tags);
      }
 
      /** Returns the title of the video. */
-     String getTitle() {
-          return title;
+     public String getTitle() {
+          return this.title;
      }
 
      /** Returns the video id of the video. */
-     String getVideoId() {
-          return videoId;
+     public String getVideoId() {
+          return this.id;
      }
 
-     /** Returns a readonly collection of the tags of the video. */
-     List<String> getTags() {
-          return tags;
+     /** Returns a read-only collection of a video's tags. */
+     public List<String> getTags() {
+          return this.tags;
      }
 }
