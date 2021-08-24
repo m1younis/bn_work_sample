@@ -5,10 +5,10 @@ import java.util.List;
 
 /** The class used to parse and execute a command given user input. */
 public class CommandParser {
-     private final VideoPlayer videoPlayer;
+     private final VideoPlayer player;
 
-     public CommandParser(VideoPlayer videoPlayer) {
-          this.videoPlayer = videoPlayer;
+     public CommandParser(VideoPlayer player) {
+          this.player = player;
      }
 
      /**
@@ -24,36 +24,36 @@ public class CommandParser {
 
           switch (input.get(0).toUpperCase()) {
                case "NUMBER_OF_VIDEOS":
-                    this.videoPlayer.numberOfVideos();
+                    this.player.numberOfVideos();
                     break;
                case "SHOW_ALL_VIDEOS":
-                    this.videoPlayer.showAllVideos();
+                    this.player.showAllVideos();
                     break;
                case "PLAY":
                     try {
-                         this.videoPlayer.playVideo(input.get(1));
+                         this.player.playVideo(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter PLAY command followed by video_id.");
                     }
                     break;
                case "PLAY_RANDOM":
-                    this.videoPlayer.playRandomVideo();
+                    this.player.playRandomVideo();
                     break;
                case "STOP":
-                    this.videoPlayer.stopVideo();
+                    this.player.stopVideo();
                     break;
                case "PAUSE":
-                    this.videoPlayer.pauseVideo();
+                    this.player.pauseVideo();
                     break;
                case "CONTINUE":
-                    this.videoPlayer.continueVideo();
+                    this.player.continueVideo();
                     break;
                case "SHOW_PLAYING":
-                    this.videoPlayer.showPlaying();
+                    this.player.showPlaying();
                     break;
                case "CREATE_PLAYLIST":
                     try {
-                         this.videoPlayer.createPlaylist(input.get(1));
+                         this.player.createPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter CREATE_PLAYLIST command followed by a " +
@@ -62,7 +62,7 @@ public class CommandParser {
                     break;
                case "ADD_TO_PLAYLIST":
                     try {
-                         this.videoPlayer.addVideoToPlaylist(input.get(1), input.get(2));
+                         this.player.addVideoToPlaylist(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter ADD_TO_PLAYLIST command followed by a "
@@ -71,7 +71,7 @@ public class CommandParser {
                     break;
                case "REMOVE_FROM_PLAYLIST":
                     try {
-                         this.videoPlayer.removeFromPlaylist(input.get(1), input.get(2));
+                         this.player.removeFromPlaylist(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter REMOVE_FROM_PLAYLIST command followed by a "
@@ -80,7 +80,7 @@ public class CommandParser {
                     break;
                case "CLEAR_PLAYLIST":
                     try {
-                         this.videoPlayer.clearPlaylist(input.get(1));
+                         this.player.clearPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter CLEAR_PLAYLIST command followed by a "
@@ -89,7 +89,7 @@ public class CommandParser {
                     break;
                case "DELETE_PLAYLIST":
                     try {
-                         this.videoPlayer.deletePlaylist(input.get(1));
+                         this.player.deletePlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter DELETE_PLAYLIST command followed by a " +
@@ -98,18 +98,18 @@ public class CommandParser {
                     break;
                case "SHOW_PLAYLIST":
                     try {
-                         this.videoPlayer.showPlaylist(input.get(1));
+                         this.player.showPlaylist(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter SHOW_PLAYLIST command followed by a " +
                                    "playlist name.");
                     }
                     break;
                case "SHOW_ALL_PLAYLISTS":
-                    this.videoPlayer.showAllPlaylists();
+                    this.player.showAllPlaylists();
                     break;
                case "SEARCH_VIDEOS":
                     try {
-                         this.videoPlayer.searchVideos(input.get(1));
+                         this.player.searchVideos(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter SEARCH_VIDEOS command followed by a " +
                                    "search term.");
@@ -117,7 +117,7 @@ public class CommandParser {
                     break;
                case "SEARCH_VIDEOS_WITH_TAG":
                     try {
-                         this.videoPlayer.searchVideosWithTag(input.get(1));
+                         this.player.searchVideosWithTag(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println(
                                    "Please enter SEARCH_VIDEOS_WITH_TAG command followed by a " +
@@ -126,10 +126,10 @@ public class CommandParser {
                     break;
                case "FLAG_VIDEO":
                     try {
-                         this.videoPlayer.flagVideo(input.get(1), input.get(2));
+                         this.player.flagVideo(input.get(1), input.get(2));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          try {
-                              this.videoPlayer.flagVideo(input.get(1));
+                              this.player.flagVideo(input.get(1));
                          } catch (ArrayIndexOutOfBoundsException f) {
                               System.out.println("Please enter FLAG_VIDEO command followed by a" +
                                         "video_id and an optional flag reason.");
@@ -138,7 +138,7 @@ public class CommandParser {
                     break;
                case "ALLOW_VIDEO":
                     try {
-                         this.videoPlayer.allowVideo(input.get(1));
+                         this.player.allowVideo(input.get(1));
                     } catch (ArrayIndexOutOfBoundsException e) {
                          System.out.println("Please enter ALLOW_VIDEO command followed by a " +
                                    "video_id.");
@@ -160,26 +160,26 @@ public class CommandParser {
       */
      private void getHelp() {
           System.out.println("Available commands:\n"
-                              + "\tNUMBER_OF_VIDEOS - Shows how many videos are in the library.\n"
-                              + "\tSHOW_ALL_VIDEOS - Lists all videos from the library.\n"
-                              + "\tPLAY <video_id> - Plays specified video.\n"
+                              + "\tNUMBER_OF_VIDEOS - Displays the number of videos in the library.\n"
+                              + "\tSHOW_ALL_VIDEOS - Lists all videos in the library.\n"
+                              + "\tPLAY <video_id> - Plays a specified video from the library.\n"
                               + "\tPLAY_RANDOM - Plays a random video from the library.\n"
-                              + "\tSTOP - Stop the current video.\n"
-                              + "\tPAUSE - Pause the current video.\n"
-                              + "\tCONTINUE - Resume the current paused video.\n"
-                              + "\tSHOW_PLAYING - Displays the title, url and paused status of the video that is currently playing (or paused).\n"
+                              + "\tSTOP - Stops the current video.\n"
+                              + "\tPAUSE - Pauses the current video.\n"
+                              + "\tCONTINUE - Resumes the current video if paused.\n"
+                              + "\tSHOW_PLAYING - Displays the title, URL and paused status of the current video.\n"
                               + "\tCREATE_PLAYLIST <playlist_name> - Creates a new (empty) playlist with the provided name.\n"
-                              + "\tADD_TO_PLAYLIST <playlist_name> <video_id> - Adds the requested video to the playlist.\n"
-                              + "\tREMOVE_FROM_PLAYLIST <playlist_name> <video_id> - Removes the specified video from the specified playlist\n"
-                              + "\tCLEAR_PLAYLIST <playlist_name> - Removes all the videos from the playlist.\n"
-                              + "\tDELETE_PLAYLIST <playlist_name> - Deletes the playlist.\n"
-                              + "\tSHOW_PLAYLIST <playlist_name> - List all the videos in this playlist.\n"
-                              + "\tSHOW_ALL_PLAYLISTS - Display all the available playlists.\n"
-                              + "\tSEARCH_VIDEOS <search_term> - Display all the videos whose titles contain the search_term.\n"
-                              + "\tSEARCH_VIDEOS_WITH_TAG <tag_name> -Display all videos whose tags contains the provided tag.\n"
-                              + "\tFLAG_VIDEO <video_id> <flag_reason> - Mark a video as flagged.\n"
-                              + "\tALLOW_VIDEO <video_id> - Removes a flag from a video.\n"
-                              + "\tHELP - Displays help.\n"
-                              + "\tEXIT - Terminates the program execution.\n");
+                              + "\tADD_TO_PLAYLIST <playlist_name> <video_id> - Adds a specified video to the named playlist.\n"
+                              + "\tREMOVE_FROM_PLAYLIST <playlist_name> <video_id> - Removes a specified video from the named playlist.\n"
+                              + "\tCLEAR_PLAYLIST <playlist_name> - Removes all videos from the named playlist.\n"
+                              + "\tDELETE_PLAYLIST <playlist_name> - Deletes the named playlist.\n"
+                              + "\tSHOW_PLAYLIST <playlist_name> - Lists all videos in the named playlist.\n"
+                              + "\tSHOW_ALL_PLAYLISTS - Displays all available playlists.\n"
+                              + "\tSEARCH_VIDEOS <search_term> - Displays all videos whose titles contain the provided term.\n"
+                              + "\tSEARCH_VIDEOS_WITH_TAG <tag_name> - Displays all videos whose tags contains the provided tag.\n"
+                              + "\tFLAG_VIDEO <video_id> <flag_reason> - Marks a specified video as flagged.\n"
+                              + "\tALLOW_VIDEO <video_id> - Removes the flag from a specified video.\n"
+                              + "\tHELP - Displays help information.\n"
+                              + "\tEXIT - Terminates the program.\n");
      }
 }
