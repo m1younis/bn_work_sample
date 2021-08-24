@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Run {
      public static void main(String[] args) {
           System.out.println("Hello and welcome to YouTube, what would you like to do? "
-                    + "Enter HELP for list of available commands or EXIT to terminate.");
+                    + "Enter HELP for list of available commands or EXIT to terminate");
           var videoPlayer = new VideoPlayer();
           var parser = new CommandParser(videoPlayer);
           var scanner = new Scanner(System.in);
@@ -16,7 +16,7 @@ public class Run {
                System.out.print("YT> ");
                var input = scanner.nextLine();
                if (input.equalsIgnoreCase("exit")) {
-                    System.out.println("YouTube has now terminated its execution. " +
+                    System.out.println("YouTube has now terminated. " +
                               "Thank you and goodbye!");
                     return;
                }
