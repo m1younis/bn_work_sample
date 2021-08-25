@@ -7,7 +7,6 @@ import java.util.*;
 public class VideoPlayer {
      private final VideoLibrary library;
 
-     private boolean playing = false;                            // Added as part of PLAY
      private Video current = null;                               // Added as part of PLAY
      private boolean paused = false;                             // Added as part of PAUSE
      private final Map<String, VideoPlaylist> playlists;         // Added as part of CREATE_PLAYLIST
@@ -53,12 +52,10 @@ public class VideoPlayer {
                if (v == null)
                     System.out.println("Cannot play video: Video does not exist");
                else {
+                    if (this.current != null)
+                         System.out.printf("Stopping video: %s\n", this.current.getTitle());
                     if (this.paused)
                          this.paused = false;
-                    if (!this.playing)
-                         this.playing = true;
-                    else
-                         System.out.printf("Stopping video: %s\n", this.current.getTitle());
                     this.current = v;
                     System.out.printf("Playing video: %s\n", v.getTitle());
                }
@@ -66,13 +63,12 @@ public class VideoPlayer {
      }
 
      public void stopVideo() {
-          if (!this.playing)
+          if (this.current == null)
                System.out.println("Cannot stop video: No video is currently playing");
           else {
                System.out.printf("Stopping video: %s\n", this.current.getTitle());
-               this.playing = false;
-               this.paused = true;
                this.current = null;
+               this.paused = false;
           }
      }
 
@@ -86,7 +82,7 @@ public class VideoPlayer {
      }
 
      public void pauseVideo() {
-          if (!this.playing)
+          if (this.current == null)
                System.out.println("Cannot pause video: No video is currently playing");
           else {
                if (!this.paused) {
@@ -98,7 +94,7 @@ public class VideoPlayer {
      }
 
      public void continueVideo() {
-          if (!this.playing)
+          if (this.current == null)
                System.out.println("Cannot continue video: No video is currently playing");
           else {
                if (!this.paused)
@@ -116,7 +112,7 @@ public class VideoPlayer {
      }
 
      public void showPlaying() {
-          if (!this.playing)
+          if (this.current == null)
                System.out.println("No video is currently playing");
           else {
                if (!this.paused)
@@ -146,14 +142,15 @@ public class VideoPlayer {
      }
 
      public void addVideoToPlaylist(String name, String id) {
-          if (this.retrievePlaylist(name) == null)
+          final VideoPlaylist vp = this.retrievePlaylist(name);
+          if (vp == null)
                System.out.printf("Cannot add video to %s: Playlist does not exist\n", name);
           else {
-               final List<Video> pl = this.retrievePlaylist(name).getVideos();
-               if (this.library.getVideo(id) == null)
+               final Video v = this.library.getVideo(id);
+               if (v == null)
                     System.out.printf("Cannot add video to %s: Video does not exist\n", name);
                else {
-                    final Video v = this.library.getVideo(id);
+                    final List<Video> pl = vp.getVideos();
                     if (!pl.contains(v)) {
                          pl.add(v);
                          System.out.printf("Added video to %s: %s\n", name, v.getTitle());
@@ -173,10 +170,11 @@ public class VideoPlayer {
      }
 
      public void showPlaylist(String name) {
-          if (this.retrievePlaylist(name) == null)
+          final VideoPlaylist vp = this.retrievePlaylist(name);
+          if (vp == null)
                System.out.printf("Cannot show playlist %s: Playlist does not exist\n", name);
           else {
-               final List<Video> pl = this.retrievePlaylist(name).getVideos();
+               final List<Video> pl = vp.getVideos();
                System.out.printf("Showing playlist: %s\n", name);
                if (pl.isEmpty())
                     System.out.println("\tNo videos here yet");
@@ -187,14 +185,15 @@ public class VideoPlayer {
      }
 
      public void removeFromPlaylist(String name, String id) {
-          if (this.retrievePlaylist(name) == null)
+          final VideoPlaylist vp = this.retrievePlaylist(name);
+          if (vp == null)
                System.out.printf("Cannot remove video from %s: Playlist does not exist\n", name);
           else {
-               final List<Video> pl = this.retrievePlaylist(name).getVideos();
-               if (this.library.getVideo(id) == null)
+               final Video v = this.library.getVideo(id);
+               if (v == null)
                     System.out.printf("Cannot remove video from %s: Video does not exist\n", name);
                else {
-                    final Video v = this.library.getVideo(id);
+                    final List<Video> pl = vp.getVideos();
                     if (!pl.contains(v))
                          System.out.printf("Cannot remove video from %s: Video is not in playlist\n", name);
                     else {
@@ -206,10 +205,11 @@ public class VideoPlayer {
      }
 
      public void clearPlaylist(String name) {
-          if (this.retrievePlaylist(name) == null)
+          final VideoPlaylist vp = this.retrievePlaylist(name);
+          if (vp == null)
                System.out.printf("Cannot clear playlist %s: Playlist does not exist\n", name);
           else {
-               this.retrievePlaylist(name).getVideos().clear();
+               vp.getVideos().clear();
                System.out.printf("Successfully removed all videos from %s\n", name);
           }
      }
