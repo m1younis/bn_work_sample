@@ -3,6 +3,7 @@ package com.google;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /** A class used to represent a video entity. */
 public class Video {
@@ -39,17 +40,14 @@ public class Video {
           return this.flagged;
      }
 
-     /** Returns the reason for which the video has been flagged. */
+     /** Returns the reason for which the video has been "flagged". */
      public String getFlag() {
           return this.reason;
      }
 
-     /** Marks the video as "flagged" with a given reason, if supplied. */
+     /** Marks the video as "flagged" with a given reason if supplied. */
      public void flag(String reason) {
           this.flagged = true;
-          if (reason == null)
-               this.reason = "Not supplied";
-          else
-               this.reason = reason;
+          this.reason = Objects.requireNonNullElse(reason, "Not supplied");
      }
 }
