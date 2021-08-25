@@ -41,8 +41,14 @@ public class VideoPlayer {
                final List<Video> vl = this.library.getVideos();
                vl.sort(Comparator.comparing(Video::getTitle));
                System.out.println("Here's a list of all available videos:");
-               vl.forEach(v -> System.out.printf("\t%s (%s) %s\n",
-                         v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags())));
+               vl.forEach(v -> {
+                    if (v.isFlagged())
+                         System.out.printf("\t%s (%s) %s - FLAGGED (reason: %s)\n",
+                                   v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()), v.getFlag());
+                    else
+                         System.out.printf("\t%s (%s) %s\n",
+                                   v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()));
+               });
           }
      }
 
@@ -52,12 +58,16 @@ public class VideoPlayer {
                if (v == null)
                     System.out.println("Cannot play video: Video does not exist");
                else {
-                    if (this.current != null)
-                         System.out.printf("Stopping video: %s\n", this.current.getTitle());
-                    if (this.paused)
-                         this.paused = false;
-                    this.current = v;
-                    System.out.printf("Playing video: %s\n", v.getTitle());
+                    if (v.isFlagged())
+                         System.out.printf("Cannot play video: Video is currently flagged (reason: %s)\n", v.getFlag());
+                    else {
+                         if (this.current != null)
+                              System.out.printf("Stopping video: %s\n", this.current.getTitle());
+                         if (this.paused)
+                              this.paused = false;
+                         this.current = v;
+                         System.out.printf("Playing video: %s\n", v.getTitle());
+                    }
                }
           }
      }
@@ -150,12 +160,16 @@ public class VideoPlayer {
                if (v == null)
                     System.out.printf("Cannot add video to %s: Video does not exist\n", name);
                else {
-                    final List<Video> pl = vp.getVideos();
-                    if (!pl.contains(v)) {
-                         pl.add(v);
-                         System.out.printf("Added video to %s: %s\n", name, v.getTitle());
-                    } else
-                         System.out.printf("Cannot add video to %s: Video already added\n", name);
+                    if (v.isFlagged())
+                         System.out.printf("Cannot add video to %s: Video is currently flagged (reason: %s)\n", name, v.getFlag());
+                    else {
+                         final List<Video> pl = vp.getVideos();
+                         if (!pl.contains(v)) {
+                              pl.add(v);
+                              System.out.printf("Added video to %s: %s\n", name, v.getTitle());
+                         } else
+                              System.out.printf("Cannot add video to %s: Video already added\n", name);
+                    }
                }
           }
      }
@@ -240,12 +254,14 @@ public class VideoPlayer {
           if (!this.library.getVideos().isEmpty()) {
                final List<Video> vl = new ArrayList<>();
                this.library.getVideos().forEach(v -> {
-                    if (func == 1) {
-                         if (v.getTitle().toLowerCase().contains(term.toLowerCase()))
-                              vl.add(v);
-                    } else {
-                         if (this.tagExists(term, v.getTags()))
-                              vl.add(v);
+                    if (!v.isFlagged()) {
+                         if (func == 1) {
+                              if (v.getTitle().toLowerCase().contains(term.toLowerCase()))
+                                   vl.add(v);
+                         } else {
+                              if (this.tagExists(term, v.getTags()))
+                                   vl.add(v);
+                         }
                     }
                });
 
@@ -280,12 +296,26 @@ public class VideoPlayer {
           this.searchVidsBy(tag, 2);
      }
 
-     public void flagVideo(String id) {
-          System.out.println("flagVideo needs implementation");
+     public void flagVideo(String id, String reason) {
+          if (!this.library.getVideos().isEmpty()) {
+               final Video v = this.library.getVideo(id);
+               if (v == null)
+                    System.out.println("Cannot flag video: Video does not exist");
+               else {
+                    if (v.isFlagged())
+                         System.out.println("Cannot flag video: Video is already flagged");
+                    else {
+                         if (this.current == v)
+                              this.stopVideo();
+                         v.flag(reason);
+                         System.out.printf("Successfully flagged video: %s (reason: %s)\n", v.getTitle(), v.getFlag());
+                    }
+               }
+          }
      }
 
-     public void flagVideo(String id, String reason) {
-          System.out.println("flagVideo needs implementation");
+     public void flagVideo(String id) {
+          this.flagVideo(id, null);
      }
 
      public void allowVideo(String id) {
