@@ -50,4 +50,10 @@ public class Video {
           this.flagged = true;
           this.reason = Objects.requireNonNullElse(reason, "Not supplied");
      }
+
+     /** Removes the video's "flag". */
+     public void unflag() {
+          this.flagged = false;
+          this.reason = null;
+     }
 }
