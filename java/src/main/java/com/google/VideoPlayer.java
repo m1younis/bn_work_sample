@@ -10,10 +10,12 @@ public class VideoPlayer {
      private Video current = null;                               // Added as part of PLAY
      private boolean paused = false;                             // Added as part of PAUSE
      private final Map<String, VideoPlaylist> playlists;         // Added as part of CREATE_PLAYLIST
+     private final List<String> unflagged;                       // Added as part of ALLOW_VIDEO
 
      public VideoPlayer() {
           this.library = new VideoLibrary();
           this.playlists = new TreeMap<>();
+          this.unflagged = new ArrayList<>();
      }
 
      public void numberOfVideos() {
@@ -86,8 +88,15 @@ public class VideoPlayer {
           if (this.library.getVideos().isEmpty())
                System.out.println("No videos available");
           else {
-               final int n = this.library.getVideos().size();
-               this.playVideo(this.library.getVideos().get(new Random().nextInt(n)).getVideoId());
+               this.unflagged.clear();
+               this.library.getVideos().forEach(v -> {
+                    if (!v.isFlagged())
+                         this.unflagged.add(v.getVideoId());
+               });
+               if (this.unflagged.isEmpty())
+                    System.out.println("No videos available");
+               else
+                    this.playVideo(this.unflagged.get(new Random().nextInt(this.unflagged.size())));
           }
      }
 
@@ -192,9 +201,16 @@ public class VideoPlayer {
                System.out.printf("Showing playlist: %s\n", name);
                if (pl.isEmpty())
                     System.out.println("\tNo videos here yet");
-               else
-                    pl.forEach(v -> System.out.printf("\t%s (%s) %s\n",
-                              v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags())));
+               else {
+                    pl.forEach(v -> {
+                         if (v.isFlagged())
+                              System.out.printf("\t%s (%s) %s - FLAGGED (reason: %s)\n",
+                                        v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()), v.getFlag());
+                         else
+                              System.out.printf("\t%s (%s) %s\n",
+                                        v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()));
+                    });
+               }
           }
      }
 
@@ -319,6 +335,17 @@ public class VideoPlayer {
      }
 
      public void allowVideo(String id) {
-          System.out.println("allowVideo needs implementation");
+          if (!this.library.getVideos().isEmpty()) {
+               final Video v = this.library.getVideo(id);
+               if (v == null)
+                    System.out.println("Cannot remove flag from video: Video does not exist");
+               else {
+                    if (v.isFlagged()) {
+                         v.unflag();
+                         System.out.printf("Successfully removed flag from video: %s\n", v.getTitle());
+                    } else
+                         System.out.println("Cannot remove flag from video: Video is not flagged");
+               }
+          }
      }
 }
