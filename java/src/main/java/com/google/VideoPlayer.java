@@ -20,22 +20,6 @@ public class VideoPlayer {
           System.out.printf("%s videos in the library\n", this.library.getVideos().size());
      }
 
-     /** A method to format video tags in the required format. */
-     private String formatVideoTags(List<String> t) {
-          if (t.isEmpty())
-               return "[]";
-
-          final StringBuilder sb = new StringBuilder("[");
-          for (int i = 0; i < t.size(); i++) {
-               if (i == t.size() - 1)
-                    sb.append(t.get(i) + "]");
-               else
-                    sb.append(t.get(i) + " ");
-          }
-
-          return sb.toString();
-     }
-
      public void showAllVideos() {
           if (!this.library.getVideos().isEmpty()) {
                final List<Video> vl = this.library.getVideos();
@@ -43,11 +27,9 @@ public class VideoPlayer {
                System.out.println("Here's a list of all available videos:");
                vl.forEach(v -> {
                     if (v.isFlagged())
-                         System.out.printf("\t%s (%s) %s - FLAGGED (reason: %s)\n",
-                                   v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()), v.getFlag());
+                         System.out.printf("\t%s - FLAGGED (reason: %s)\n", v, v.getFlag());
                     else
-                         System.out.printf("\t%s (%s) %s\n",
-                                   v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()));
+                         System.out.printf("\t%s\n", v);
                });
           }
      }
@@ -123,19 +105,14 @@ public class VideoPlayer {
           }
      }
 
-     /** A method added to output video data in the required format. */
-     private String formatVideo(Video v) {
-          return v.getTitle() + " (" + v.getVideoId() + ") " + this.formatVideoTags(v.getTags());
-     }
-
      public void showPlaying() {
           if (this.current == null)
                System.out.println("No video is currently playing");
           else {
                if (!this.paused)
-                    System.out.printf("Currently playing: %s\n", this.formatVideo(this.current));
+                    System.out.printf("Currently playing: %s\n", this.current);
                else
-                    System.out.printf("Currently playing: %s - PAUSED\n", this.formatVideo(this.current));
+                    System.out.printf("Currently playing: %s - PAUSED\n", this.current);
           }
      }
 
@@ -202,11 +179,9 @@ public class VideoPlayer {
                else {
                     pl.forEach(v -> {
                          if (v.isFlagged())
-                              System.out.printf("\t%s (%s) %s - FLAGGED (reason: %s)\n",
-                                        v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()), v.getFlag());
+                              System.out.printf("\t%s - FLAGGED (reason: %s)\n", v, v.getFlag());
                          else
-                              System.out.printf("\t%s (%s) %s\n",
-                                        v.getTitle(), v.getVideoId(), this.formatVideoTags(v.getTags()));
+                              System.out.printf("\t%s\n", v);
                     });
                }
           }
@@ -254,30 +229,24 @@ public class VideoPlayer {
           }
      }
 
-     /** A method to determine whether a given {@link String} corresponds to an existing tag. */
-     private boolean tagExists(String t, List<String> l) {
-          for (String s : l) {
-               if (s.equalsIgnoreCase(t))
-                    return true;
-          }
-
-          return false;
-     }
-
-     private void searchVidsBy(String term, int func) {
+     private void searchVideosBy(String term, int func) {
           if (!this.library.getVideos().isEmpty()) {
                final List<Video> vl = new ArrayList<>();
-               this.library.getVideos().forEach(v -> {
-                    if (!v.isFlagged()) {
-                         if (func == 1) {
+               if (func == 1) {
+                    this.library.getVideos().forEach(v -> {
+                         if (!v.isFlagged()) {
                               if (v.getTitle().toLowerCase().contains(term.toLowerCase()))
                                    vl.add(v);
-                         } else {
-                              if (this.tagExists(term, v.getTags()))
+                         }
+                    });
+               } else {
+                    this.library.getVideos().forEach(v -> {
+                         if (!v.isFlagged()) {
+                              if (v.tagExists(term))
                                    vl.add(v);
                          }
-                    }
-               });
+                    });
+               }
 
                if (vl.isEmpty())
                     System.out.printf("No search results for %s\n", term);
@@ -285,7 +254,7 @@ public class VideoPlayer {
                     vl.sort(Comparator.comparing(Video::getTitle));
                     System.out.printf("Here are the results for %s:\n", term);
                     for (int i = 1; i <= vl.size(); i++)
-                         System.out.printf("\t%d) %s\n", i, this.formatVideo(vl.get(i - 1)));
+                         System.out.printf("\t%d) %s\n", i, vl.get(i - 1));
 
                     System.out.println("Would you like to play any of the above? If yes, specify the number of the video.\n" +
                               "If your answer is not a valid number, we will assume it's a no.");
@@ -303,11 +272,11 @@ public class VideoPlayer {
      }
 
      public void searchVideos(String term) {
-          this.searchVidsBy(term, 1);
+          this.searchVideosBy(term, 1);
      }
 
      public void searchVideosWithTag(String tag) {
-          this.searchVidsBy(tag, 2);
+          this.searchVideosBy(tag, 2);
      }
 
      public void flagVideo(String id, String reason) {
