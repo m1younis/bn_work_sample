@@ -10,12 +10,10 @@ public class VideoPlayer {
      private Video current = null;                               // Added as part of PLAY
      private boolean paused = false;                             // Added as part of PAUSE
      private final Map<String, VideoPlaylist> playlists;         // Added as part of CREATE_PLAYLIST
-     private final List<String> unflagged;                       // Added as part of ALLOW_VIDEO
 
      public VideoPlayer() {
           this.library = new VideoLibrary();
           this.playlists = new TreeMap<>();
-          this.unflagged = new ArrayList<>();
      }
 
      public void numberOfVideos() {
@@ -88,15 +86,15 @@ public class VideoPlayer {
           if (this.library.getVideos().isEmpty())
                System.out.println("No videos available");
           else {
-               this.unflagged.clear();
+               final List<String> uf = new ArrayList<>();
                this.library.getVideos().forEach(v -> {
                     if (!v.isFlagged())
-                         this.unflagged.add(v.getVideoId());
+                         uf.add(v.getVideoId());
                });
-               if (this.unflagged.isEmpty())
+               if (uf.isEmpty())
                     System.out.println("No videos available");
                else
-                    this.playVideo(this.unflagged.get(new Random().nextInt(this.unflagged.size())));
+                    this.playVideo(uf.get(new Random().nextInt(uf.size())));
           }
      }
 
