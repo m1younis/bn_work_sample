@@ -20,6 +20,22 @@ public class Video {
           this.tags = Collections.unmodifiableList(tags);
      }
 
+     /** Formats the video's tags as required in {@link String} form. */
+     private String formatTags() {
+          if (this.tags.isEmpty())
+               return "[]";
+
+          final StringBuilder sb = new StringBuilder("[");
+          for (int i = 0; i < this.tags.size(); i++) {
+               if (i == this.tags.size() - 1)
+                    sb.append(this.tags.get(i) + "]");
+               else
+                    sb.append(this.tags.get(i) + " ");
+          }
+
+          return sb.toString();
+     }
+
      /** Returns the video's title. */
      public String getTitle() {
           return this.title;
@@ -33,6 +49,16 @@ public class Video {
      /** Returns a read-only collection of a video's tags. */
      public List<String> getTags() {
           return this.tags;
+     }
+
+     /** Determines whether a given term exists amongst the video's tags. */
+     public boolean tagExists(String term) {
+          for (String tag : this.tags) {
+               if (tag.equalsIgnoreCase(term))
+                    return true;
+          }
+
+          return false;
      }
 
      /** Returns the video's "flagged" status. */
@@ -55,5 +81,11 @@ public class Video {
      public void unflag() {
           this.flagged = false;
           this.reason = null;
+     }
+
+     /** Displays the video as required in {@link String} form. */
+     @Override
+     public String toString() {
+          return this.title + " (" + this.id + ") " + this.formatTags();
      }
 }
