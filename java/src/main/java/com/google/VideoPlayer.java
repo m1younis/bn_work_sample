@@ -3,7 +3,7 @@ package com.google;
 
 import java.util.*;
 
-/** A class representing the video player simulator. */
+/** The class representing the video player simulator. */
 public class VideoPlayer {
 	private final VideoLibrary library;
 
@@ -16,10 +16,12 @@ public class VideoPlayer {
 		this.playlists = new TreeMap<>();
 	}
 
+	/** Returns the number of videos initially available in the library. */
 	public void numberOfVideos() {
 		System.out.printf("%s videos in the library\n", this.library.getVideos().size());
 	}
 
+	/** Displays (natural ordering, by title) each {@link Video} in the library, given it is not "flagged". */
 	public void showAllVideos() {
 		if (!this.library.getVideos().isEmpty()) {
 			final List<Video> vl = this.library.getVideos();
@@ -34,6 +36,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Plays a {@link Video} given it is not "flagged". */
 	public void playVideo(String id) {
 		if (!this.library.getVideos().isEmpty()) {
 			final Video v = this.library.getVideo(id);
@@ -54,6 +57,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Stops the current {@link Video} from playing. */
 	public void stopVideo() {
 		if (this.current == null)
 			System.out.println("Cannot stop video: No video is currently playing");
@@ -64,6 +68,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Plays a random {@link Video} given it is not "flagged". */
 	public void playRandomVideo() {
 		if (this.library.getVideos().isEmpty())
 			System.out.println("No videos available");
@@ -80,6 +85,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Pauses the {@link Video} currently playing. */
 	public void pauseVideo() {
 		if (this.current == null)
 			System.out.println("Cannot pause video: No video is currently playing");
@@ -92,6 +98,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Continues the current {@link Video} given it is paused. */
 	public void continueVideo() {
 		if (this.current == null)
 			System.out.println("Cannot continue video: No video is currently playing");
@@ -105,6 +112,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Displays the status of the {@link Video} currently playing. */
 	public void showPlaying() {
 		if (this.current == null)
 			System.out.println("No video is currently playing");
@@ -116,7 +124,7 @@ public class VideoPlayer {
 		}
 	}
 
-	/** A method to search for/retrieve a specific {@link VideoPlaylist} object. */
+	/** Searches for/retrieves a {@link VideoPlaylist} by name. */
 	private VideoPlaylist retrievePlaylist(String name) {
 		for (String key : this.playlists.keySet()) {
 			if (key.equalsIgnoreCase(name))
@@ -126,6 +134,7 @@ public class VideoPlayer {
 		return null;
 	}
 
+	/** Creates a new {@link VideoPlaylist}, assigning it a given (unique) name. */
 	public void createPlaylist(String name) {
 		if (this.retrievePlaylist(name) != null)
 			System.out.println("Cannot create playlist: A playlist with the same name already exists");
@@ -135,6 +144,8 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Adds a {@link Video} (specified by ID) to a named, existing {@link VideoPlaylist} given it exists,
+	 * not "flagged" and not already present. */
 	public void addVideoToPlaylist(String name, String id) {
 		final VideoPlaylist vp = this.retrievePlaylist(name);
 		if (vp == null)
@@ -158,6 +169,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Displays (natural ordering, by name) each {@link VideoPlaylist} currently in the library. */
 	public void showAllPlaylists() {
 		if (this.playlists.isEmpty())
 			System.out.println("No playlists exist yet");
@@ -167,6 +179,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Displays each {@link Video} in a named, existing {@link VideoPlaylist} given it isn't "flagged". */
 	public void showPlaylist(String name) {
 		final VideoPlaylist vp = this.retrievePlaylist(name);
 		if (vp == null)
@@ -187,6 +200,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Removes a {@link Video} (specified by ID) from a named, existing {@link VideoPlaylist} given it exists. */
 	public void removeFromPlaylist(String name, String id) {
 		final VideoPlaylist vp = this.retrievePlaylist(name);
 		if (vp == null)
@@ -207,6 +221,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Removes all videos from a named {@link VideoPlaylist} given it exists. */
 	public void clearPlaylist(String name) {
 		final VideoPlaylist vp = this.retrievePlaylist(name);
 		if (vp == null)
@@ -217,6 +232,7 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Removes a named {@link VideoPlaylist} from the library, given it exists. */
 	public void deletePlaylist(String name) {
 		if (this.retrievePlaylist(name) == null)
 			System.out.printf("Cannot delete playlist %s: Playlist does not exist\n", name);
@@ -229,6 +245,8 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Searches for/retrieves a {@link Video} either by title or tag.
+	 * Includes an option to play once retrieved. */
 	private void searchVideosBy(String term, int func) {
 		if (!this.library.getVideos().isEmpty()) {
 			final List<Video> vl = new ArrayList<>();
@@ -271,14 +289,17 @@ public class VideoPlayer {
 			System.out.println("No videos available");
 	}
 
+	/** Calls {@link #searchVideosBy(String, int)} supplying a given title to search for a {@link Video} with. */
 	public void searchVideos(String term) {
 		this.searchVideosBy(term, 1);
 	}
 
+	/** Calls {@link #searchVideosBy(String, int)} supplying a given tag to search for a {@link Video} with. */
 	public void searchVideosWithTag(String tag) {
 		this.searchVideosBy(tag, 2);
 	}
 
+	/** Marks a {@link Video} (specified by ID) as "flagged" supplying a reason, given it exists. */
 	public void flagVideo(String id, String reason) {
 		if (!this.library.getVideos().isEmpty()) {
 			final Video v = this.library.getVideo(id);
@@ -297,10 +318,12 @@ public class VideoPlayer {
 		}
 	}
 
+	/** Calls {@link #flagVideo(String, String)} given that no reason is supplied. */
 	public void flagVideo(String id) {
 		this.flagVideo(id, null);
 	}
 
+	/** Removes the "flag" from a {@link Video} (specified by ID) given it exists and is "flagged". */
 	public void allowVideo(String id) {
 		if (!this.library.getVideos().isEmpty()) {
 			final Video v = this.library.getVideo(id);
