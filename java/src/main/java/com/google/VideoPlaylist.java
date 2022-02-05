@@ -14,6 +14,11 @@ public class VideoPlaylist {
         this.videos = new ArrayList<>();
     }
 
+    /** Returns the playlist's name. */
+    public String getName() {
+        return this.name;
+    }
+
     /** Returns a read-only collection of videos present in the playlist. */
     public List<Video> getVideos() {
         return this.videos;
