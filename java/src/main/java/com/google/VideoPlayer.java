@@ -7,13 +7,13 @@ import java.util.*;
 public class VideoPlayer {
     private final VideoLibrary library;
 
-    private Video current = null;                               // Added as part of PLAY
-    private boolean paused = false;                             // Added as part of PAUSE
-    private final Map<String, VideoPlaylist> playlists;         // Added as part of CREATE_PLAYLIST
+    private Video current = null;                       // Added as part of PLAY
+    private boolean paused = false;                     // Added as part of PAUSE
+    private final List<VideoPlaylist> playlists;        // Added as part of CREATE_PLAYLIST
 
     public VideoPlayer() {
         this.library = new VideoLibrary();
-        this.playlists = new TreeMap<>();
+        this.playlists = new ArrayList<>();
     }
 
     /** Returns the number of videos initially available in the library. */
@@ -21,7 +21,7 @@ public class VideoPlayer {
         System.out.printf("%s videos in the library\n", this.library.getVideos().size());
     }
 
-    /** Displays (natural ordering, by title) each {@link Video} in the library, given it is not "flagged". */
+    /** Displays (by title, natural order) each {@link Video} in the library, given it is not "flagged". */
     public void showAllVideos() {
         if (!this.library.getVideos().isEmpty()) {
             final List<Video> vl = this.library.getVideos();
@@ -130,9 +130,9 @@ public class VideoPlayer {
 
     /** Searches for/retrieves a {@link VideoPlaylist} by name. */
     private VideoPlaylist retrievePlaylist(String name) {
-        for (String key : this.playlists.keySet()) {
-            if (key.equalsIgnoreCase(name))
-                return this.playlists.get(key);
+        for (VideoPlaylist pl : this.playlists) {
+            if (name.equalsIgnoreCase(pl.getName()))
+                return pl;
         }
 
         return null;
@@ -143,7 +143,7 @@ public class VideoPlayer {
         if (this.retrievePlaylist(name) != null)
             System.out.println("Cannot create playlist: A playlist with the same name already exists");
         else {
-            this.playlists.put(name, new VideoPlaylist(name));
+            this.playlists.add(new VideoPlaylist(name));
             System.out.printf("Successfully created new playlist: %s\n", name);
         }
     }
@@ -175,13 +175,14 @@ public class VideoPlayer {
         }
     }
 
-    /** Displays (by name, in natural order) each {@link VideoPlaylist} currently in the library. */
+    /** Displays (by name, natural order) each {@link VideoPlaylist} currently in the library. */
     public void showAllPlaylists() {
         if (this.playlists.isEmpty())
             System.out.println("No playlists exist yet");
         else {
             System.out.println("Showing all playlists:");
-            this.playlists.keySet().forEach(name -> System.out.printf("\t%s\n", name));
+            this.playlists.sort(Comparator.comparing(VideoPlaylist::getName));
+            this.playlists.forEach(pl -> System.out.printf("\t%s\n", pl.getName()));
         }
     }
 
@@ -245,10 +246,7 @@ public class VideoPlayer {
         if (this.retrievePlaylist(name) == null)
             System.out.printf("Cannot delete playlist %s: Playlist does not exist\n", name);
         else {
-            for (String key : this.playlists.keySet()) {
-                if (key.equalsIgnoreCase(name))
-                    this.playlists.remove(key);
-            }
+            this.playlists.removeIf(pl -> name.equalsIgnoreCase(pl.getName()));
             System.out.printf("Deleted playlist: %s\n", name);
         }
     }
