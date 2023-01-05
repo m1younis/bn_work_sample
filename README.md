@@ -1,16 +1,16 @@
 # Bright Network Technology Internship 2021 – Google Coding Challenge
 
-A repo containing solutions to a programming challenge set by Google for the 2021 Bright Network
-technology internship work sample. More details relating to its nature are documented extensively
-in [this](https://github.com/m1younis/bn_work_sample/files/10329373/instructions.pdf) document.
+This repo contains a solution to the programming challenge set by Google during the 2021 Bright
+Network Technology Internship work sample. Further details relating to its nature are covered
+extensively in
+[this](https://github.com/m1younis/bn_work_sample/files/10329373/instructions.pdf) document.
 
 The certificate of completion attained can be found
 [here](https://www.brightnetwork.co.uk/certificates/internship-experience-uk-techn_7g53xcudnj8hwh).
 
 ## Installation & Configuration
 
-This challenge was completed using Java 11, JUnit 5.4 and Maven 3.8. If you need to install Java
-for Windows, follow
+Java 11, JUnit 5.4 and Maven 3.8 are required. If you need to install Java for Windows, follow
 [these](https://java.tutorials24x7.com/blog/how-to-install-java-11-on-windows)
 instructions. Click
 [here](https://docs.oracle.com/en/java/javase/11/install/installation-jdk-macos.html)
@@ -68,7 +68,7 @@ $  mvn test -Dtest=Part4Test
 Follow the official instructions from JetBrains (found
 [here](https://www.jetbrains.com/help/idea/maven-support.html#maven_import_project_start)) to open
 this repository as a Maven project in IntelliJ, which should automatically recognise the `java/`
-directory as such.
+directory as such due to the presence of a `pom.xml` file.
 
 Ensure that the project SDK is set to Java 11 by following
 [these](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk) instructions. Any vendor
@@ -80,8 +80,8 @@ the green play-shaped symbol positioned in the sidebar.
 To run a unit test associated with a part of the challenge, locate `/test/` within the project
 menu, open the specific file, then click on the green double-arrow symbol besides the class name.
 
-Right-clicking the root directory and selecting the `"Run 'All Tests'"` option from the drop-down
-menu will do as stated.
+Right-clicking the root directory and selecting the **`"Run 'All Tests'"`** option from the
+drop-down menu will do as stated.
 
 Please note that your current version of IntelliJ will most likely not be the same as that shown in
 the following screen recording summarising the steps above, yet they remain identical.
