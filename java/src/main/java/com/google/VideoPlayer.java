@@ -21,19 +21,20 @@ public class VideoPlayer {
         System.out.printf("%s videos in the library\n", this.library.getVideos().size());
     }
 
-    /** Displays (by title, natural order) each {@link Video} in the library, given it is not "flagged". */
+    /** Displays (by title, natural order) each {@link Video} in the library, given it is not
+     * "flagged". */
     public void showAllVideos() {
         if (!this.library.getVideos().isEmpty()) {
             final List<Video> vl = this.library.getVideos();
             vl.sort(Comparator.comparing(Video::getTitle));
             System.out.println("Here's a list of all available videos:");
             vl.forEach(
-                    v -> {
-                        if (v.isFlagged())
-                            System.out.printf("\t%s - FLAGGED (reason: %s)\n", v, v.getFlag());
-                        else
-                            System.out.printf("\t%s\n", v);
-                    }
+                vid -> {
+                    if (vid.isFlagged())
+                        System.out.printf("\t%s - FLAGGED (reason: %s)\n", vid, vid.getFlag());
+                    else
+                        System.out.printf("\t%s\n", vid);
+                }
             );
         }
     }
@@ -41,19 +42,22 @@ public class VideoPlayer {
     /** Plays a {@link Video} given it is not "flagged". */
     public void playVideo(String id) {
         if (!this.library.getVideos().isEmpty()) {
-            final Video v = this.library.getVideo(id);
-            if (v == null)
+            final Video vid = this.library.getVideo(id);
+            if (vid == null)
                 System.out.println("Cannot play video: Video does not exist");
             else {
-                if (v.isFlagged())
-                    System.out.printf("Cannot play video: Video is currently flagged (reason: %s)\n", v.getFlag());
-                else {
+                if (vid.isFlagged()) {
+                    System.out.printf(
+                        "Cannot play video: Video is currently flagged (reason: %s)\n",
+                        vid.getFlag()
+                    );
+                } else {
                     if (this.current != null)
                         System.out.printf("Stopping video: %s\n", this.current.getTitle());
                     if (this.paused)
                         this.paused = false;
-                    this.current = v;
-                    System.out.printf("Playing video: %s\n", v.getTitle());
+                    this.current = vid;
+                    System.out.printf("Playing video: %s\n", vid.getTitle());
                 }
             }
         }
@@ -77,11 +81,12 @@ public class VideoPlayer {
         else {
             final List<String> uf = new ArrayList<>();
             this.library.getVideos().forEach(
-                    v -> {
-                        if (!v.isFlagged())
-                            uf.add(v.getVideoId());
-                    }
+                vid -> {
+                    if (!vid.isFlagged())
+                        uf.add(vid.getVideoId());
+                }
             );
+
             if (uf.isEmpty())
                 System.out.println("No videos available");
             else
@@ -140,34 +145,38 @@ public class VideoPlayer {
 
     /** Creates a new {@link VideoPlaylist}, assigning it a given (unique) name. */
     public void createPlaylist(String name) {
-        if (this.retrievePlaylist(name) != null)
-            System.out.println("Cannot create playlist: A playlist with the same name already exists");
-        else {
+        if (this.retrievePlaylist(name) != null) {
+            System.out.println(
+                "Cannot create playlist: A playlist with the same name already exists"
+            );
+        } else {
             this.playlists.add(new VideoPlaylist(name));
             System.out.printf("Successfully created new playlist: %s\n", name);
         }
     }
 
-    /** Adds a {@link Video} (specified by ID) to a named, existing {@link VideoPlaylist} given it exists,
+    /** Adds a {@link Video} (by ID) to a named, existing {@link VideoPlaylist} given it exists,
      * not "flagged" and not already present. */
     public void addVideoToPlaylist(String name, String id) {
         final VideoPlaylist vp = this.retrievePlaylist(name);
         if (vp == null)
             System.out.printf("Cannot add video to %s: Playlist does not exist\n", name);
         else {
-            final Video v = this.library.getVideo(id);
-            if (v == null)
+            final Video vid = this.library.getVideo(id);
+            if (vid == null)
                 System.out.printf("Cannot add video to %s: Video does not exist\n", name);
             else {
-                if (v.isFlagged())
+                if (vid.isFlagged()) {
                     System.out.printf(
-                            "Cannot add video to %s: Video is currently flagged (reason: %s)\n", name, v.getFlag()
+                        "Cannot add video to %s: Video is currently flagged (reason: %s)\n",
+                        name,
+                        vid.getFlag()
                     );
-                else {
+                } else {
                     final List<Video> pl = vp.getVideos();
-                    if (!pl.contains(v)) {
-                        pl.add(v);
-                        System.out.printf("Added video to %s: %s\n", name, v.getTitle());
+                    if (!pl.contains(vid)) {
+                        pl.add(vid);
+                        System.out.printf("Added video to %s: %s\n", name, vid.getTitle());
                     } else
                         System.out.printf("Cannot add video to %s: Video already added\n", name);
                 }
@@ -186,7 +195,8 @@ public class VideoPlayer {
         }
     }
 
-    /** Displays each {@link Video} in a named, existing {@link VideoPlaylist} given it isn't "flagged". */
+    /** Displays each {@link Video} in a named, existing {@link VideoPlaylist} given it isn't
+     * "flagged". */
     public void showPlaylist(String name) {
         final VideoPlaylist vp = this.retrievePlaylist(name);
         if (vp == null)
@@ -198,33 +208,37 @@ public class VideoPlayer {
                 System.out.println("\tNo videos here yet");
             else {
                 pl.forEach(
-                        v -> {
-                            if (v.isFlagged())
-                                System.out.printf("\t%s - FLAGGED (reason: %s)\n", v, v.getFlag());
-                            else
-                                System.out.printf("\t%s\n", v);
-                        }
+                    vid -> {
+                        if (vid.isFlagged())
+                            System.out.printf("\t%s - FLAGGED (reason: %s)\n", vid, vid.getFlag());
+                        else
+                            System.out.printf("\t%s\n", vid);
+                    }
                 );
             }
         }
     }
 
-    /** Removes a {@link Video} (specified by ID) from a named, existing {@link VideoPlaylist} given it exists. */
+    /** Removes a {@link Video} (by its ID) from a named, existing {@link VideoPlaylist}
+     * given it exists. */
     public void removeFromPlaylist(String name, String id) {
         final VideoPlaylist vp = this.retrievePlaylist(name);
         if (vp == null)
             System.out.printf("Cannot remove video from %s: Playlist does not exist\n", name);
         else {
-            final Video v = this.library.getVideo(id);
-            if (v == null)
+            final Video vid = this.library.getVideo(id);
+            if (vid == null)
                 System.out.printf("Cannot remove video from %s: Video does not exist\n", name);
             else {
                 final List<Video> pl = vp.getVideos();
-                if (!pl.contains(v))
-                    System.out.printf("Cannot remove video from %s: Video is not in playlist\n", name);
-                else {
-                    pl.remove(v);
-                    System.out.printf("Removed video from %s: %s\n", name, v.getTitle());
+                if (!pl.contains(vid)) {
+                    System.out.printf(
+                        "Cannot remove video from %s: Video is not in playlist\n",
+                        name
+                    );
+                } else {
+                    pl.remove(vid);
+                    System.out.printf("Removed video from %s: %s\n", name, vid.getTitle());
                 }
             }
         }
@@ -251,28 +265,28 @@ public class VideoPlayer {
         }
     }
 
-    /** Searches for/retrieves a {@link Video} either by title or tag.
-     * Includes an option to play once retrieved. */
+    /** Searches for/retrieves a {@link Video} either by title or tag. Includes an option to play
+     * once retrieved. */
     private void searchVideosBy(String term, int func) {
         if (!this.library.getVideos().isEmpty()) {
             final List<Video> vl = new ArrayList<>();
             if (func == 1) {
                 this.library.getVideos().forEach(
-                        v -> {
-                            if (!v.isFlagged()) {
-                                if (v.getTitle().toLowerCase().contains(term.toLowerCase()))
-                                    vl.add(v);
-                            }
+                    vid -> {
+                        if (!vid.isFlagged()) {
+                            if (vid.getTitle().toLowerCase().contains(term.toLowerCase()))
+                                vl.add(vid);
                         }
+                    }
                 );
             } else {
                 this.library.getVideos().forEach(
-                        v -> {
-                            if (!v.isFlagged()) {
-                                if (v.tagExists(term))
-                                    vl.add(v);
-                            }
+                    vid -> {
+                        if (!vid.isFlagged()) {
+                            if (vid.tagExists(term))
+                                vl.add(vid);
                         }
+                    }
                 );
             }
 
@@ -285,46 +299,53 @@ public class VideoPlayer {
                     System.out.printf("\t%d) %s\n", i, vl.get(i - 1));
 
                 System.out.println(
-                        "Would you like to play any of the above? If yes, specify the number of the video.\n" +
-                        "If your answer is not a valid number, we will assume it's a no."
+                    "Would you like to play any of the above? If yes, specify the number of the " +
+                    "video.\nIf your answer is not a valid number, we will assume it's a no."
                 );
-                int x;
+
+                int n;
                 try {
-                    x = new Scanner(System.in).nextInt();
+                    n = new Scanner(System.in).nextInt();
                 } catch (InputMismatchException e) {
-                    x = 0;
+                    n = 0;
                 }
-                if (x > 0 && x <= vl.size())
-                    this.playVideo(vl.get(x - 1).getVideoId());
+                if (n > 0 && n <= vl.size())
+                    this.playVideo(vl.get(n - 1).getVideoId());
             }
         } else
             System.out.println("No videos available");
     }
 
-    /** Calls {@link #searchVideosBy(String, int)} with a given title supplied to search for a {@link Video}. */
+    /** Calls {@link #searchVideosBy(String, int)} with a given title supplied to search for a
+     * {@link Video}. */
     public void searchVideos(String term) {
         this.searchVideosBy(term, 1);
     }
 
-    /** Calls {@link #searchVideosBy(String, int)} with a given tag supplied to search for a {@link Video}. */
+    /** Calls {@link #searchVideosBy(String, int)} with a given tag supplied to search for a
+     * {@link Video}. */
     public void searchVideosWithTag(String tag) {
         this.searchVideosBy(tag, 2);
     }
 
-    /** Marks a {@link Video} (specified by ID) as "flagged" supplying a reason, given it exists. */
+    /** Marks a {@link Video} (by ID) as "flagged" supplying a reason, given it exists. */
     public void flagVideo(String id, String reason) {
         if (!this.library.getVideos().isEmpty()) {
-            final Video v = this.library.getVideo(id);
-            if (v == null)
+            final Video vid = this.library.getVideo(id);
+            if (vid == null)
                 System.out.println("Cannot flag video: Video does not exist");
             else {
-                if (v.isFlagged())
+                if (vid.isFlagged())
                     System.out.println("Cannot flag video: Video is already flagged");
                 else {
-                    if (this.current == v)
+                    if (this.current == vid)
                         this.stopVideo();
-                    v.flag(reason);
-                    System.out.printf("Successfully flagged video: %s (reason: %s)\n", v.getTitle(), v.getFlag());
+                    vid.flag(reason);
+                    System.out.printf(
+                        "Successfully flagged video: %s (reason: %s)\n",
+                        vid.getTitle(),
+                        vid.getFlag()
+                    );
                 }
             }
         }
@@ -335,16 +356,19 @@ public class VideoPlayer {
         this.flagVideo(id, null);
     }
 
-    /** Removes the "flag" from a {@link Video} (specified by ID) given it exists and is "flagged". */
+    /** Removes the "flag" from a {@link Video} (by ID) given it exists and is "flagged". */
     public void allowVideo(String id) {
         if (!this.library.getVideos().isEmpty()) {
-            final Video v = this.library.getVideo(id);
-            if (v == null)
+            final Video vid = this.library.getVideo(id);
+            if (vid == null)
                 System.out.println("Cannot remove flag from video: Video does not exist");
             else {
-                if (v.isFlagged()) {
-                    v.unflag();
-                    System.out.printf("Successfully removed flag from video: %s\n", v.getTitle());
+                if (vid.isFlagged()) {
+                    vid.unflag();
+                    System.out.printf(
+                        "Successfully removed flag from video: %s\n",
+                        vid.getTitle()
+                    );
                 } else
                     System.out.println("Cannot remove flag from video: Video is not flagged");
             }

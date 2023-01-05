@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/** A class used to represent a video entity. */
+/** The class used to represent a video entity. */
 public class Video {
     private final String title;
     private final String id;
     private final List<String> tags;
 
-    private boolean flagged = false;        // Added as part of FLAG_VIDEO
-    private String reason = null;           // Added as part of FLAG_VIDEO
+    private boolean flagged = false;            // Added as part of FLAG_VIDEO
+    private String reason = null;               // Added as part of FLAG_VIDEO
 
     public Video(String title, String id, List<String> tags) {
         this.title = title;

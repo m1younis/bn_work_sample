@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class Run {
     public static void main(String[] args) {
         System.out.println(
-                "Hello and welcome to YouTube, what would you like to do? " +
-                "Enter HELP for list of available commands or EXIT to terminate"
+            "Hello and welcome to YouTube, what would you like to do?\n" +
+            "Enter HELP for list of available commands or EXIT to terminate"
         );
         var videoPlayer = new VideoPlayer();
         var parser = new CommandParser(videoPlayer);
